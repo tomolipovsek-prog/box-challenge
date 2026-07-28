@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Box Challenge – Demo</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div>
+        <h1>BOX CHALLENGE</h1>
+        <p>Brezplačni demo • Limato Games</p>
+      </div>
+      <div class="mode-label">Način: <strong id="modeLabel">Classic</strong></div>
+    </header>
+
+    <section class="controls">
+      <select id="mode">
+        <option value="9">Classic 1–9 • 2 kocki • ★★</option>
+        <option value="12">Extended 1–12 • 2 kocki • ★★★</option>
+        <option value="15">Pro 1–15 • 3 kocke • ★★★★</option>
+        <option value="18">Master 1–18 • 3 kocke • ★★★★★</option>
+      </select>
+      <button id="rollBtn" class="primary">VRZI KOCKE</button>
+      <button id="confirmBtn" disabled>ZAPRI IZBRANE ŠTEVILKE</button>
+      <button id="resetBtn" class="danger">NOVA IGRA</button>
+    </section>
+
+    <section class="board">
+      <div class="felt">
+        <div id="tiles" class="tiles"></div>
+        <div id="dice" class="dice"></div>
+        <div id="message" class="message">Začni z metom kock.</div>
+
+        <div class="status-grid">
+          <div class="card">Ciljna vsota<div id="target" class="big">–</div></div>
+          <div class="card">Izbrane številke<div id="selectedSum" class="big">0</div></div>
+          <div class="card">Trenutni rezultat<div id="score" class="big">45</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="rules">
+      <strong>Pravila demo različice:</strong>
+      Po metu izberi eno ali več odprtih številk, katerih vsota je enaka metu.
+      Vsako številko lahko uporabiš samo enkrat. Ko ni več veljavne kombinacije,
+      je igre konec. Nižji preostali seštevek je boljši.
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
