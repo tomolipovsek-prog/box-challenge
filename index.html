@@ -1,55 +1,62 @@
 <!DOCTYPE html>
 <html lang="sl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Box Challenge – Demo</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Box Challenge v0.2</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main class="app">
-    <header class="topbar">
-      <div>
-        <h1>BOX CHALLENGE</h1>
-        <p>Brezplačni demo • Limato Games</p>
-      </div>
-      <div class="mode-label">Način: <strong id="modeLabel">Classic</strong></div>
-    </header>
+<main class="app">
+<header><div><h1>BOX CHALLENGE</h1><p>Demo v0.2 • Limato Games</p></div><div>Način: <b id="modeLabel">Classic</b></div></header>
 
-    <section class="controls">
-      <select id="mode">
-        <option value="9">Classic 1–9 • 2 kocki • ★★</option>
-        <option value="12">Extended 1–12 • 2 kocki • ★★★</option>
-        <option value="15">Pro 1–15 • 3 kocke • ★★★★</option>
-        <option value="18">Master 1–18 • 3 kocke • ★★★★★</option>
-      </select>
-      <button id="rollBtn" class="primary">VRZI KOCKE</button>
-      <button id="confirmBtn" disabled>ZAPRI IZBRANE ŠTEVILKE</button>
-      <button id="resetBtn" class="danger">NOVA IGRA</button>
-    </section>
+<section class="setup">
+<label>Igralno ime<input id="nickname" maxlength="24" value="Tomaž"></label>
+<label>Izberi box<select id="mode">
+<option value="9">Classic 1–9 • 2 kocki • ★★</option>
+<option value="12">Extended 1–12 • 2 kocki • ★★★</option>
+<option value="15">Pro 1–15 • 3 kocke • ★★★★</option>
+<option value="18">Master 1–18 • 3 kocke • ★★★★★</option>
+</select></label>
+<label>Število rund<select id="rounds">
+<option value="3">3 runde</option><option value="5">5 rund</option><option value="7">7 rund</option>
+</select></label>
+</section>
 
-    <section class="board">
-      <div class="felt">
-        <div id="tiles" class="tiles"></div>
-        <div id="dice" class="dice"></div>
-        <div id="message" class="message">Začni z metom kock.</div>
+<section class="strip">
+<span>Igralec: <b id="playerLabel">Tomaž</b></span>
+<span>Runda: <b id="roundLabel">1 od 3</b></span>
+<span>Skupaj: <b id="matchTotal">0</b></span>
+</section>
 
-        <div class="status-grid">
-          <div class="card">Ciljna vsota<div id="target" class="big">–</div></div>
-          <div class="card">Izbrane številke<div id="selectedSum" class="big">0</div></div>
-          <div class="card">Trenutni rezultat<div id="score" class="big">45</div></div>
-        </div>
-      </div>
-    </section>
+<section class="controls">
+<button id="rollBtn" class="primary">VRZI KOCKE</button>
+<button id="confirmBtn" disabled>ZAPRI IZBRANE ŠTEVILKE</button>
+<button id="nextRoundBtn" class="primary hidden">NASLEDNJA RUNDA</button>
+<button id="resetBtn" class="danger">NOVA TEKMA</button>
+</section>
 
-    <section class="rules">
-      <strong>Pravila demo različice:</strong>
-      Po metu izberi eno ali več odprtih številk, katerih vsota je enaka metu.
-      Vsako številko lahko uporabiš samo enkrat. Ko ni več veljavne kombinacije,
-      je igre konec. Nižji preostali seštevek je boljši.
-    </section>
-  </main>
+<section class="layout">
+<section class="board"><div class="felt">
+<div id="tiles" class="tiles"></div>
+<div id="dice" class="dice"></div>
+<div id="message" class="message">Začni z metom kock.</div>
+<div class="status">
+<div class="card">Ciljna vsota<div id="target" class="big">–</div></div>
+<div class="card">Izbrane številke<div id="selectedSum" class="big">0</div></div>
+<div class="card">Rezultat runde<div id="score" class="big">45</div></div>
+</div>
+</div></section>
 
-  <script src="script.js"></script>
+<aside class="scoreboard">
+<h2>Rezultati</h2>
+<div id="roundResults"></div>
+<div class="total">Skupaj <b id="scoreboardTotal">0</b></div>
+</aside>
+</section>
+
+<section class="rules"><b>Pravila:</b> Po metu izberi eno ali več odprtih številk, katerih vsota je enaka metu. Vsako številko lahko uporabiš samo enkrat. Po koncu runde se rezultat shrani. Nižji skupni rezultat je boljši.</section>
+</main>
+<script src="script.js"></script>
 </body>
 </html>
