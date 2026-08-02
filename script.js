@@ -17,7 +17,7 @@ const confirmBtn = document.getElementById("confirmBtn");
 const rollBtn = document.getElementById("rollBtn");
 
 const sum = values => values.reduce((a,b) => a+b, 0);
-
+const diceFaces = ["", "⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
 function setMessage(text){
   messageEl.textContent = text;
 }
@@ -98,7 +98,7 @@ function rollDice(){
   values.forEach(value => {
     const die = document.createElement("div");
     die.className = "die";
-    die.textContent = value;
+    die.textContent = diceFaces[value];
     diceEl.appendChild(die);
   });
 
