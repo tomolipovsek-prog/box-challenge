@@ -12,13 +12,40 @@ function translate(){document.querySelectorAll("[data-t]").forEach(e=>e.textCont
 function setMsg(x){$("message").textContent=x}
 function lockSetup(v){["name","mode","rounds"].forEach(id=>$(id).disabled=v);$("start").disabled=v}
 function read(){s.max=+$("mode").value;s.rounds=+$("rounds").value;s.dice=defaultDice[s.max]}
-function startMatch(){read();s.active=true;s.round=1;s.results=[];lockSetup(true);$("new").disabled=true;startRound();renderResults()}
+function startMatch(){if(s.active)return;read();s.active=true;s.round=1;s.results=[];lockSetup(true);$("new").disabled=true;startRound();renderResults()}
 function startRound(){s.open=Array.from({length:s.max},(_,i)=>i+1);s.sel=[];s.target=null;s.rolled=false;s.penalty=0;s.switches=0;s.rolling=false;s.perfect=false;s.dice=defaultDice[s.max];$("diceChoice").value=s.dice;$("diceChoice").disabled=false;$("change").disabled=false;$("roll").disabled=false;$("close").disabled=true;$("next").hidden=true;$("dice").innerHTML="";$("target").textContent="–";$("selected").textContent="0";renderTiles();update();setMsg(`${tr("round")} ${s.round}/${s.rounds}. ${tr("begin")}`);$("ai").textContent="🤖"}
 function renderTiles(){$("tiles").innerHTML="";for(let i=1;i<=s.max;i++){let e=document.createElement("div"),o=s.open.includes(i),q=s.sel.includes(i);e.className="tile "+(o?"open":"closed")+(q?" selected":"");e.textContent=i;if(o)e.onclick=()=>toggle(i);$("tiles").appendChild(e)}}
 function toggle(n){if(!s.rolled||s.rolling)return;s.sel=s.sel.includes(n)?s.sel.filter(x=>x!==n):[...s.sel,n];$("selected").textContent=sum(s.sel);$("close").disabled=sum(s.sel)!==s.target;renderTiles()}
 function combo(nums,w){function f(i,t){if(t===w)return true;if(t>w||i===nums.length)return false;return f(i+1,t+nums[i])||f(i+1,t)}return f(0,0)}
-function cube(v){let w=document.createElement("div");w.className="cubeWrap rolling";let c=document.createElement("div");c.className="cube";[["front",3],["back",4],["right",2],["left",5],["top",1],["bottom",6]].forEach(([cl,n])=>{let f=document.createElement("div");f.className="face "+cl;pips[n].forEach(p=>{let d=document.createElement("span");d.className="pip "+p;f.appendChild(d)});c.appendChild(f)});w.appendChild(c);requestAnimationFrame(()=>c.style.transform=`rotateX(${720+Math.random()*360}deg) rotateY(${720+Math.random()*360}deg)`);setTimeout(()=>{w.classList.remove("rolling");c.style.transform=orient[v]},820);return w}
-function showDice(vals){$("dice").innerHTML="";vals.forEach(v=>$("dice").appendChild(cube(v)))}
+function flatDie(v){
+  let die=document.createElement("div");
+  die.className="face finalDie";
+  die.style.position="relative";
+  die.style.transform="none";
+  die.style.flex="0 0 74px";
+  pips[v].forEach(pos=>{let d=document.createElement("span");d.className="pip "+pos;die.appendChild(d)});
+  return die
+}
+function rollingCube(){
+  let w=document.createElement("div");w.className="cubeWrap rolling";
+  let c=document.createElement("div");c.className="cube";
+  [["front",3],["back",4],["right",2],["left",5],["top",1],["bottom",6]].forEach(([cl,n])=>{
+    let f=document.createElement("div");f.className="face "+cl;
+    pips[n].forEach(pos=>{let d=document.createElement("span");d.className="pip "+pos;f.appendChild(d)});
+    c.appendChild(f)
+  });
+  w.appendChild(c);
+  requestAnimationFrame(()=>c.style.transform=`rotateX(${720+Math.random()*360}deg) rotateY(${720+Math.random()*360}deg)`);
+  return w
+}
+function showDice(vals){
+  $("dice").innerHTML="";
+  vals.forEach(()=>$("dice").appendChild(rollingCube()));
+  setTimeout(()=>{
+    $("dice").innerHTML="";
+    vals.forEach(v=>$("dice").appendChild(flatDie(v)))
+  },840)
+}
 function provoke(){let p=$("persona").value,m={friend:["Mirno, ena dobra odločitev naenkrat."],professor:[`Cilj je ${s.target}. Oglej si vse kombinacije.`],provoker:["Si prepričan, da boš izbral najboljšo kombinacijo?","Morda bi bila menjava kock pametna ... ali draga napaka."],comic:["Kocke so svoje naredile. Zdaj si na vrsti ti, Einstein."],silent:[""]};$("ai").textContent=p==="silent"?"":"🤖 "+m[p][Math.floor(Math.random()*m[p].length)]}
 async function roll(){if(!s.active||s.rolling||s.rolled)return;s.rolling=true;$("roll").disabled=true;$("change").disabled=true;$("diceChoice").disabled=true;let vals=Array.from({length:s.dice},()=>1+Math.floor(Math.random()*6));showDice(vals);await sleep(900);s.target=sum(vals);s.rolled=true;s.rolling=false;$("target").textContent=s.target;if(!combo(s.open,s.target))finish(`${tr("nomove")}: ${s.target}.`);else{setMsg(`${tr("choose")} ${s.target}.`);provoke()}}
 function closeNums(){if(sum(s.sel)!==s.target)return;s.open=s.open.filter(n=>!s.sel.includes(n));s.sel=[];s.target=null;s.rolled=false;$("target").textContent="–";$("selected").textContent="0";$("dice").innerHTML="";$("close").disabled=true;renderTiles();update();if(!s.open.length){s.perfect=true;finish(tr("perfect"))}else{$("roll").disabled=false;$("change").disabled=s.switches>=3;$("diceChoice").disabled=s.switches>=3;setMsg(tr("ok"))}}
@@ -30,4 +57,4 @@ function update(){$("player").textContent=$("name").value.trim()||"Player";$("ro
 function key(){return`bc-best-${s.max}-${s.rounds}`}function saveBest(v){let o=+localStorage.getItem(key());if(!o||v<o)localStorage.setItem(key(),v);loadBest()}function loadBest(){$("best").textContent=localStorage.getItem(key())||"–"}
 function celebrate(){$("celebrateTitle").textContent=tr("perfect");$("celebrateText").textContent=$("name").value;$("celebrate").hidden=false;for(let i=0;i<50;i++){let c=document.createElement("div");c.className="confetti";c.style.left=Math.random()*100+"vw";c.style.background=`hsl(${Math.random()*360} 80% 60%)`;c.style.animationDelay=Math.random()*.7+"s";document.body.appendChild(c);setTimeout(()=>c.remove(),3500)}}
 async function piLogin(){try{if(!window.Pi)throw 0;Pi.init({version:"2.0",sandbox:true});let a=await Pi.authenticate(["username"],()=>{});$("piStatus").textContent=a.user.username;$("name").value=a.user.username}catch{$("piStatus").textContent="Open in Pi Browser"}}
-$("enter").onclick=()=>{$("intro").hidden=true;$("game").hidden=false;translate();loadBest()};$("lang").onchange=e=>{s.lang=e.target.value;translate();renderResults();update()};$("start").onclick=startMatch;$("roll").onclick=roll;$("close").onclick=closeNums;$("next").onclick=nextRound;$("new").onclick=startMatch;$("change").onclick=changeDice;$("piLogin").onclick=piLogin;$("ok").onclick=()=>$("celebrate").hidden=true;translate();
+$("enter").onclick=()=>{$("intro").hidden=true;$("game").hidden=false;translate();loadBest()};$("lang").onchange=e=>{s.lang=e.target.value;translate();renderResults();update()};$("name").oninput=()=>{if(!s.active)update()};$("start").onclick=startMatch;$("roll").onclick=roll;$("close").onclick=closeNums;$("next").onclick=nextRound;$("new").onclick=startMatch;$("change").onclick=changeDice;$("piLogin").onclick=piLogin;$("ok").onclick=()=>$("celebrate").hidden=true;translate();
