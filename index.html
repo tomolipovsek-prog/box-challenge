@@ -1,62 +1,22 @@
-<!DOCTYPE html>
-<html lang="sl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Box Challenge v0.2</title>
-<link rel="stylesheet" href="style.css">
-</head>
-<body>
+<!doctype html><html lang="sl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#241238"><title>Box Challenge v0.3</title><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><link rel="stylesheet" href="style.css"><script src="https://sdk.minepi.com/pi-sdk.js"></script></head><body>
 <main class="app">
-<header><div><h1>BOX CHALLENGE</h1><p>Demo v0.2 • Limato Games</p></div><div>Način: <b id="modeLabel">Classic</b></div></header>
-
+<section id="intro" class="intro"><div class="pi">π</div><h1>BOX CHALLENGE</h1><p>Think. Roll. Win.</p><button id="enter" class="primary">START</button><small>FOUNDER EDITION • LiMATO Games</small></section>
+<section id="game" hidden>
+<header><div><h1>BOX CHALLENGE</h1><p>Pi Edition v0.3</p></div><div><button id="piLogin" class="primary">π Sign in</button><span id="piStatus">Guest</span></div></header>
 <section class="setup">
-<label>Igralno ime<input id="nickname" maxlength="24" value="Tomaž"></label>
-<label>Izberi box<select id="mode">
-<option value="9">Classic 1–9 • 2 kocki • ★★</option>
-<option value="12">Extended 1–12 • 2 kocki • ★★★</option>
-<option value="15">Pro 1–15 • 3 kocke • ★★★★</option>
-<option value="18">Master 1–18 • 3 kocke • ★★★★★</option>
-</select></label>
-<label>Število rund<select id="rounds">
-<option value="3">3 runde</option><option value="5">5 rund</option><option value="7">7 rund</option>
-</select></label>
+<label><span data-t="language">Jezik</span><select id="lang"><option value="sl">Slovenščina</option><option value="en">English</option><option value="de">Deutsch</option><option value="fr">Français</option><option value="it">Italiano</option><option value="es">Español</option><option value="pt">Português</option><option value="zh">中文</option><option value="hi">हिन्दी</option><option value="ja">日本語</option><option value="ru">Русский</option></select></label>
+<label><span data-t="name">Igralno ime</span><input id="name" value="Tomaž" maxlength="24"></label>
+<label><span data-t="box">Box</span><select id="mode"><option value="9">Classic 1–9 ★★</option><option value="12">Extended 1–12 ★★★</option><option value="15">Pro 1–15 ★★★★</option><option value="18">Master 1–18 ★★★★★</option></select></label>
+<label><span data-t="rounds">Runde</span><select id="rounds"><option>3</option><option>5</option><option>7</option></select></label>
+<label><span data-t="persona">AI osebnost</span><select id="persona"><option value="friend">🙂 Friend</option><option value="professor">🤓 Professor</option><option value="provoker">😈 Provoker</option><option value="comic">😂 Comic</option><option value="silent">🤫 Silent</option></select></label>
+<button id="start" class="primary" data-t="start">ZAČNI TEKMO</button>
 </section>
-
-<section class="strip">
-<span>Igralec: <b id="playerLabel">Tomaž</b></span>
-<span>Runda: <b id="roundLabel">1 od 3</b></span>
-<span>Skupaj: <b id="matchTotal">0</b></span>
+<section class="strip"><span><b data-t="player">Igralec</b>: <i id="player">–</i></span><span><b data-t="round">Runda</b>: <i id="round">–</i></span><span><b data-t="dice">Kocke</b>: <i id="diceCount">–</i></span><span><b data-t="penalty">Pribitek</b>: <i id="penalty">0</i></span><span><b data-t="total">Skupaj</b>: <i id="total">0</i></span></section>
+<section class="controls"><button id="roll" class="primary" disabled data-t="roll">VRZI KOCKE</button><button id="close" disabled data-t="close">ZAPRI IZBRANE ŠTEVILKE</button><button id="next" class="primary" hidden data-t="next">NASLEDNJA RUNDA</button><button id="new" class="danger" disabled data-t="new">NOVA TEKMA</button></section>
+<section class="switch"><div><b data-t="switch">Menjava kock</b><p>+2 • +3 • +4</p></div><div><select id="diceChoice" disabled><option value="1">1 🎲</option><option value="2">2 🎲</option><option value="3">3 🎲</option><option value="4">4 🎲</option></select><button id="change" disabled data-t="change">ZAMENJAJ</button></div></section>
+<section class="layout"><section class="board"><div class="watermark">π</div><div class="felt"><div id="tiles" class="tiles"></div><div class="arena"><div id="dice" class="dice"></div></div><div id="ai" class="ai">🤖</div><div id="message" class="message"></div><div class="cards"><div><span data-t="target">Ciljna vsota</span><strong id="target">–</strong></div><div><span data-t="selected">Izbrane številke</span><strong id="selected">0</strong></div><div><span data-t="score">Rezultat runde</span><strong id="score">0</strong></div></div></div></section>
+<aside><h2 data-t="results">Rezultati</h2><div id="results"></div><div class="sum"><span data-t="total">Skupaj</span><b id="sum">0</b></div><div class="sum"><span data-t="best">Osebni rekord</span><b id="best">–</b></div></aside></section>
+<p class="rules" data-t="rules">Po metu izberi odprte številke, katerih vsota je enaka metu. Vsako številko lahko uporabiš samo enkrat. Nižji rezultat je boljši.</p>
 </section>
-
-<section class="controls">
-<button id="rollBtn" class="primary">VRZI KOCKE</button>
-<button id="confirmBtn" disabled>ZAPRI IZBRANE ŠTEVILKE</button>
-<button id="nextRoundBtn" class="primary hidden">NASLEDNJA RUNDA</button>
-<button id="resetBtn" class="danger">NOVA TEKMA</button>
-</section>
-
-<section class="layout">
-<section class="board"><div class="felt">
-<div id="tiles" class="tiles"></div>
-<div id="dice" class="dice"></div>
-<div id="message" class="message">Začni z metom kock.</div>
-<div class="status">
-<div class="card">Ciljna vsota<div id="target" class="big">–</div></div>
-<div class="card">Izbrane številke<div id="selectedSum" class="big">0</div></div>
-<div class="card">Rezultat runde<div id="score" class="big">45</div></div>
-</div>
-</div></section>
-
-<aside class="scoreboard">
-<h2>Rezultati</h2>
-<div id="roundResults"></div>
-<div class="total">Skupaj <b id="scoreboardTotal">0</b></div>
-</aside>
-</section>
-
-<section class="rules"><b>Pravila:</b> Po metu izberi eno ali več odprtih številk, katerih vsota je enaka metu. Vsako številko lahko uporabiš samo enkrat. Po koncu runde se rezultat shrani. Nižji skupni rezultat je boljši.</section>
-</main>
-<script src="script.js"></script>
-</body>
-</html>
+<div id="celebrate" class="overlay" hidden><div><div class="trophy">🏆</div><h2 id="celebrateTitle">PERFECT GAME</h2><p id="celebrateText"></p><button id="ok" class="primary">OK</button></div></div>
+</main><script src="script.js"></script></body></html>
